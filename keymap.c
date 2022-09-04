@@ -3,6 +3,7 @@
 
 
 enum tap_dance_codes {
+    DTLT,
   DANCE_1,
   DANCE_2,
   DANCE_3,
@@ -28,28 +29,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q, KC_W, KC_E, KC_R, KC_T,    		                            KC_BSPC, KC_O, KC_I, KC_U, KC_Y,
         KC_A, KC_S, MT(OSM(MOD_LGUI),KC_D), MT(OSM(MOD_LALT),KC_F), KC_G,   KC_P, KC_L, MT(OSM(MOD_RGUI),KC_K), MT(OSM(MOD_RALT),KC_J), KC_H,
         KC_Z, KC_X, KC_C, KC_V, KC_B,     				                    TD(DANCE_3), TD(DANCE_1), TD(DANCE_2), KC_M, KC_N,
-        MT(MOD_MEH,KC_SPACE),OSM(MOD_LSFT),                                 TO(1), OSM(MOD_RCTL)
+        MT(MOD_MEH,KC_SPACE), MT(OSM(MOD_LSFT|MOD_LALT),OSM(MOD_LSFT)),     TO(1), MT(OSM(MOD_RCTL|MOD_RALT),OSM(MOD_RCTL))
     ),
 
     [1] = LAYOUT(
         KC_ESCAPE, KC_AT, KC_HASH, KC_DLR, KC_PERC,                                                                                 KC_BSPC, KC_DELETE, KC_ASTR, KC_AMPR, KC_CIRC,
-        KC_TAB, KC_LEFT_CURLY_BRACE, MT(OSM(MOD_LGUI),KC_LEFT_BRACKET), MT(OSM(MOD_LALT),KC_LEFT_PAREN), KC_LEFT_ANGLE_BRACKET,     KC_ENTER, KC_RIGHT_CURLY_BRACE, MT(OSM(MOD_RGUI),KC_RIGHT_BRACKET), MT(OSM(MOD_RALT),KC_RIGHT_PAREN), KC_RIGHT_ANGLE_BRACKET,
+        KC_TAB, KC_LEFT_CURLY_BRACE, MT(OSM(MOD_LGUI),KC_LEFT_BRACKET), MT(OSM(MOD_LALT),LSFT(KC_LEFT_PAREN)), KC_LEFT_ANGLE_BRACKET,     KC_ENTER, KC_RIGHT_CURLY_BRACE, MT(OSM(MOD_RGUI),KC_RIGHT_BRACKET), MT(OSM(MOD_RALT),LSFT(KC_RIGHT_PAREN)), KC_RIGHT_ANGLE_BRACKET,
         MT(LSFT(KC_GRV),KC_GRV), MT(LSFT(KC_QUOT),KC_QUOT), KC_PIPE, KC_COLON, KC_BACKSLASH,                                        TO(2), KC_EXCLAIM, KC_QUESTION, KC_SEMICOLON, KC_SLASH,
-        TO(0), KC_TRANSPARENT,                                                                                                      TO(3),KC_TRANSPARENT
+        DTLT, KC_TRANSPARENT,                                                                                            TO(3), KC_TRANSPARENT
     ),
 
     [2] = LAYOUT(
         KC_F1, KC_F2, KC_F3, KC_F4, KC_NO,      KC_TRANSPARENT, KC_TRANSPARENT, KC_NO, KC_NO, KC_NO,
         KC_F5, KC_F6, KC_F7, KC_F8, KC_NO,      KC_TRANSPARENT, KC_RIGHT, KC_UP, KC_DOWN, KC_LEFT,
         KC_F9, KC_F10, KC_F11, KC_F12, KC_NO,   KC_NO, KC_END, KC_PAGE_UP, KC_PAGE_DOWN, KC_HOME,
-        TO(0), KC_TRANSPARENT,                  TO(1), KC_TRANSPARENT
+        KC_TRANSPARENT, KC_TRANSPARENT,         TO(1), KC_TRANSPARENT
     ),
 
     [3] = LAYOUT(
         KC_ASTR, KC_LPRN, KC_RPRN, KC_EQL, KC_NO,   KC_TRANSPARENT, KC_9, KC_8, KC_7, KC_PLUS,
         KC_NO, KC_DOT, KC_COMM, KC_SLASH, KC_NO,    KC_TRANSPARENT, KC_6, KC_5, KC_4, KC_MINS,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,          TO(2), KC_3, KC_2, KC_1, KC_0,
-        TO(0), KC_TRANSPARENT,                      TO(1), KC_TRANSPARENT
+        KC_TRANSPARENT, KC_TRANSPARENT,             TO(1), KC_TRANSPARENT
+    ),
+
+    [4] = LAYOUT(
+        KC_HASH, KC_HASH, KC_HASH, KC_HASH, KC_HASH,    KC_TRANSPARENT, KC_HASH, KC_HASH, KC_HASH, KC_HASH,
+        KC_CIRC, KC_T, KC_P, KC_H, KC_ASTR,             KC_D,KC_T,KC_L,KC_P,KC_F,
+        KC_S, KC_K, KC_W, KC_R, KC_ASTR,                KC_Z, KC_S,KC_G, KC_B, KC_R,
+        MT(MOD_MEH,KC_SPACE), KC_TRANSPARENT,           TO(1), KC_TRANSPARENT
     )
 
 };
@@ -883,6 +891,22 @@ void pipe_end_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
     dance_state.step = 0;
 }
+
+void dtlt(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        layer_move(0);
+        reset_tap_dance(state);
+        SEND_STRING("dtlt1");
+    } else if (state->count == 2) {
+        layer_move(4);
+        reset_tap_dance(state);
+        SEND_STRING("dtlt2");
+    } else if (state->count >= 3) {
+        reset_tap_dance(state);
+        SEND_STRING("dtlt3");
+    }
+}
+
 qk_tap_dance_action_t tap_dance_actions[] = {
         [DANCE_1] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_1, dance_1_finished, dance_1_reset),
         [DANCE_2] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_2, dance_2_finished, dance_2_reset),
@@ -901,4 +925,5 @@ qk_tap_dance_action_t tap_dance_actions[] = {
         [DANCE_63] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_63, dance_63_finished, dance_63_reset),
         [BKSL_HME] = ACTION_TAP_DANCE_FN_ADVANCED(on_bksl_hme, bksl_hme_finished, bksl_hme_reset),
         [PIPE_END] = ACTION_TAP_DANCE_FN_ADVANCED(on_pipe_end, pipe_end_finished, pipe_end_reset),
+        [DTLT] = ACTION_TAP_DANCE_FN(dtlt)
 };
