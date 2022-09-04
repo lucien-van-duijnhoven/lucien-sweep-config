@@ -911,11 +911,17 @@ void shift_alt(qk_tap_dance_state_t *state, void *user_data) {
         set_oneshot_mods(MOD_BIT(KC_LSFT));
         if (state->pressed) {
             set_oneshot_mods(MOD_BIT(KC_LSFT));
+            if (state->interrupted) {
+                set_oneshot_mods(MOD_BIT(KC_LSFT));
+            }
         }
     } else {
         set_oneshot_mods(MOD_BIT(KC_LSFT)|MOD_BIT(KC_LALT));
         if (state->pressed) {
             set_oneshot_mods(MOD_BIT(KC_LSFT)|MOD_BIT(KC_LALT));
+            if (state->interrupted) {
+                set_oneshot_mods(MOD_BIT(KC_LSFT)|MOD_BIT(KC_LALT));
+            }
         }
     }
 }
@@ -925,11 +931,17 @@ void ctrl_alt(qk_tap_dance_state_t *state, void *user_data) {
         set_oneshot_mods(MOD_BIT(KC_RCTL));
         if (state->pressed) {
             set_oneshot_mods(MOD_BIT(KC_RCTL));
+            if (state->interrupted) {
+                set_oneshot_mods(MOD_BIT(KC_RCTL));
+            }
         }
     } else {
         set_oneshot_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT));
         if (state->pressed) {
             set_oneshot_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT));
+            if (state->interrupted) {
+                set_oneshot_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT));
+            }
         }
     }
 }
