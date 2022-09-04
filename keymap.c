@@ -23,34 +23,34 @@ enum tap_dance_codes {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [0] = LAYOUT(
-      KC_Y,   KC_C,     KC_L,     KC_M,    KC_K,    		                                                KC_BSPC, TD(DANCE_2), KC_U, KC_F, KC_Z,
-      KC_I, KC_S, MT(MOD_LALT,KC_R), MT(MOD_LGUI,KC_T), KC_G,  	                  KC_O, KC_A,  MT(MOD_RALT,KC_E), MT(MOD_RGUI,KC_N),  KC_P,
-      KC_Q,   KC_V,  KC_W,   KC_D,  KC_J,     				                                        KC_X,	TD(DANCE_1),    TD(DANCE_3),   	KC_H,  	KC_B,
-		    					MT(MOD_MEH,KC_SPACE),OSM(MOD_LSFT),                                                                                      TO(1),           OSM(MOD_RCTL)
-  ),
 
-   [1] = LAYOUT(
-    KC_ESCAPE, KC_AT    ,KC_HASH     ,KC_DLR     ,KC_PERC ,                            KC_BSPC , MT(KC_COLN,KC_SCLN)   ,    KC_ASTR   ,   KC_AMPR   ,    KC_CIRC   ,
-    KC_TAB,   KC_LCBR    ,KC_LBRC    ,KC_LPRN    ,KC_LEFT_ANGLE_BRACKET ,               KC_ENTER  ,    KC_RCBR,     KC_RBRC,  KC_RPRN,       KC_RIGHT_ANGLE_BRACKET,
-    KC_GRV, MT(KC_DOUBLE_QUOTE, KC_QUOT)  ,KC_PIPE   ,KC_COLON   ,KC_BACKSLASH   ,                  TO(2)   ,    KC_EXCLAIM   ,     KC_QUESTION   ,  KC_SEMICOLON   ,   KC_SLASH    ,
-		    					                                                        TO(0) ,KC_TRANSPARENT,                                                                     TO(3),              OSM(KC_RALT)
-  ),
+    [0] = LAYOUT(
+        KC_Q, KC_W, KC_E, KC_R, KC_T,    		                            KC_BSPC, KC_O, KC_I, KC_U, KC_Y,
+        KC_A, KC_S, MT(OSM(MOD_LGUI),KC_D), MT(OSM(MOD_LALT),KC_F), KC_G,   KC_P, KC_L, MT(OSM(MOD_RGUI),KC_K), MT(OSM(MOD_RALT),KC_J), KC_H,
+        KC_Z, KC_X, KC_C, KC_V, KC_B,     				                    TD(DANCE_3), TD(DANCE_1), TD(DANCE_2), KC_M, KC_N,
+        MT(MOD_MEH,KC_SPACE),OSM(MOD_LSFT),                                 TO(1), OSM(MOD_RCTL)
+    ),
 
-[2] = LAYOUT(
-      TD(DANCE_54),   KC_MS_WH_LEFT,  KC_MS_UP,       KC_MS_WH_RIGHT, TD(DANCE_55),                 KC_TRANSPARENT,  LGUI(KC_RBRACKET), RCTL(KC_TAB),LCTL(LSFT(KC_TAB)),     LGUI(KC_LBRACKET),
-	     TD(DANCE_56),   KC_MS_LEFT,     KC_MS_DOWN,     KC_MS_RIGHT,    MT(MOD_LGUI,KC_DEL),          KC_ENTER,   TD(DANCE_63),  MT(MOD_RALT,KC_UP),      MT(MOD_RGUI,KC_DOWN),  TD(DANCE_60),
-     TD(DANCE_58),   KC_MS_BTN2,     KC_MS_WH_UP,    KC_MS_WH_DOWN, KC_TRANSPARENT,                    KC_NO,        KC_MS_ACCEL2,    KC_MS_ACCEL1,   KC_MS_ACCEL0,       KC_MS_BTN1,
-                                                     TO(0),   KC_TRANSPARENT,                                TO(1), KC_TRANSPARENT
-  ),
+    [1] = LAYOUT(
+        KC_ESCAPE, KC_AT, KC_HASH, KC_DLR, KC_PERC,                                                                                 KC_BSPC, KC_DELETE, KC_ASTR, KC_AMPR, KC_CIRC,
+        KC_TAB, KC_LEFT_CURLY_BRACE, MT(OSM(MOD_LGUI),KC_LEFT_BRACKET), MT(OSM(MOD_LALT),KC_LEFT_PAREN), KC_LEFT_ANGLE_BRACKET,     KC_ENTER, KC_RIGHT_CURLY_BRACE, MT(OSM(MOD_RGUI),KC_RIGHT_BRACKET), MT(OSM(MOD_RALT),KC_RIGHT_PAREN), KC_RIGHT_ANGLE_BRACKET,
+        MT(LSFT(KC_GRV),KC_GRV), MT(LSFT(KC_QUOT),KC_QUOT), KC_PIPE, KC_COLON, KC_BACKSLASH,                                        TO(2), KC_EXCLAIM, KC_QUESTION, KC_SEMICOLON, KC_SLASH,
+        TO(0), KC_TRANSPARENT,                                                                                                      TO(3),KC_TRANSPARENT
+    ),
 
-  [3] = LAYOUT(
-   KC_ESCAPE,      KC_MEDIA_PLAY_PAUSE,KC_MEDIA_PREV_TRACK,KC_MEDIA_NEXT_TRACK,LSFT(KC_MINS),                 KC_TRANSPARENT,   KC_9,    KC_8,    KC_7,  KC_MINS,
-    KC_TAB,  KC_TRANSPARENT, KC_AUDIO_VOL_DOWN,KC_AUDIO_VOL_UP,LSFT(KC_EQL),                                                  KC_ENTER, KC_6, KC_5,  KC_4,     KC_EQL,
-    RESET,   KC_KP_ASTERISK, KC_BRIGHTNESS_DOWN,KC_BRIGHTNESS_UP,KC_KP_DOT,                                                    TO(2),   KC_3,     KC_2,   KC_1,  KC_0,
-                TO(0), KC_TRANSPARENT,                                                                                                  TO(1)  ,  KC_TRANSPARENT
-  )
+    [2] = LAYOUT(
+        KC_F1, KC_F2, KC_F3, KC_F4, KC_NO,      KC_TRANSPARENT, KC_TRANSPARENT, KC_NO, KC_NO, KC_NO,
+        KC_F5, KC_F6, KC_F7, KC_F8, KC_NO,      KC_TRANSPARENT, KC_RIGHT, KC_UP, KC_DOWN, KC_LEFT,
+        KC_F9, KC_F10, KC_F11, KC_F12, KC_NO,   KC_NO, KC_END, KC_PAGE_UP, KC_PAGE_DOWN, KC_HOME,
+        TO(0), KC_TRANSPARENT,                  TO(1), KC_TRANSPARENT
+    ),
 
+    [3] = LAYOUT(
+        KC_ASTR, KC_LPRN, KC_RPRN, KC_EQL, KC_NO,   KC_TRANSPARENT, KC_9, KC_8, KC_7, KC_PLUS,
+        KC_NO, KC_DOT, KC_COMM, KC_SLASH, KC_NO,    KC_TRANSPARENT, KC_6, KC_5, KC_4, KC_MINS,
+        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,          TO(2), KC_3, KC_2, KC_1, KC_0,
+        TO(0), KC_TRANSPARENT,                      TO(1), KC_TRANSPARENT
+    )
 
 };
 
