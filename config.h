@@ -46,3 +46,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef MOUSEKEY_WHEEL_MAX_SPEED
 #define MOUSEKEY_WHEEL_MAX_SPEED 3
 
+#define FORCE_NKRO
