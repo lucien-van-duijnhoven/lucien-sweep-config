@@ -21,10 +21,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [1] = LAYOUT(
-        KC_ESCAPE, KC_AT, KC_HASH, KC_DLR, KC_PERC,                                                                                 KC_BSPC, KC_DELETE, KC_ASTR, KC_AMPR, KC_CIRC,
-        KC_TAB, KC_LEFT_CURLY_BRACE, MT(OSM(MOD_LGUI),KC_LEFT_BRACKET), LSFT(KC_LEFT_PAREN), KC_LEFT_ANGLE_BRACKET,     KC_ENTER, KC_RIGHT_CURLY_BRACE, MT(OSM(MOD_RGUI),KC_RIGHT_BRACKET), RSFT(KC_RIGHT_PAREN), KC_RIGHT_ANGLE_BRACKET,
-        MT(LSFT(KC_GRV),KC_GRV), MT(LSFT(KC_QUOT),KC_QUOT), KC_PIPE, KC_COLON, KC_BACKSLASH,                                        TO(2), KC_EXCLAIM, KC_QUESTION, KC_SEMICOLON, KC_SLASH,
-        TD(DTLT), KC_TRANSPARENT,                                                                                            TO(3), KC_TRANSPARENT
+        KC_ESCAPE, KC_AT, KC_HASH, KC_DLR, KC_PERC,                                                                 KC_BSPC, KC_DELETE, KC_ASTR, KC_AMPR, KC_CIRC,
+        KC_TAB, KC_LEFT_CURLY_BRACE, MT(OSM(MOD_LGUI),KC_LEFT_BRACKET), LSFT(KC_LEFT_PAREN), KC_LEFT_ANGLE_BRACKET, KC_ENTER, KC_RIGHT_CURLY_BRACE, MT(OSM(MOD_RGUI),KC_RIGHT_BRACKET), RSFT(KC_RIGHT_PAREN), KC_RIGHT_ANGLE_BRACKET,
+        MT(LSFT(KC_GRV),KC_GRV), MT(LSFT(KC_QUOT),KC_QUOT), KC_PIPE, KC_COLON, KC_BACKSLASH,                        TO(2), KC_EXCLAIM, KC_QUESTION, KC_SEMICOLON, KC_SLASH,
+        TD(DTLT), KC_TRANSPARENT,                                                                                   TO(3), KC_TRANSPARENT
     ),
 
     [2] = LAYOUT(
@@ -42,10 +42,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [4] = LAYOUT(
-        KC_HASH, KC_HASH, KC_HASH, KC_HASH, KC_HASH,    KC_TRANSPARENT, KC_HASH, KC_HASH, KC_HASH, KC_HASH,
-        KC_CIRC, KC_T, KC_P, KC_H, KC_ASTR,             KC_D,KC_T,KC_L,KC_P,KC_F,
-        KC_S, KC_K, KC_W, KC_R, KC_ASTR,                KC_Z, KC_S,KC_G, KC_B, KC_R,
-        MT(MOD_MEH,KC_SPACE), KC_TRANSPARENT,           TO(1), KC_TRANSPARENT
+        KC_HASH, KC_HASH, KC_HASH, MT(MOD_MEH,KC_SPACE), TD(SHIFT_ALT), KC_TRANSPARENT, KC_DELETE, KC_HASH, TO(1), TD(CTRL_ALT),
+        KC_CIRC, KC_T, KC_P, KC_H, KC_ASTR,                             KC_D,KC_T,KC_L,KC_P,KC_F,
+        KC_S, KC_K, KC_W, KC_R, KC_ASTR,                                KC_Z, KC_S,KC_G, KC_B, KC_R,
+        KC_A, KC_O,                                                     KC_E, KC_U 
     )
 
 };
@@ -249,7 +249,7 @@ uint8_t shift_alt_dance_step(qk_tap_dance_state_t *state) {
 void shift_alt_finished(qk_tap_dance_state_t *state, void *user_data) {
     dance_state.step = shift_alt_dance_step(state);
     switch (dance_state.step) {
-        case SINGLE_TAP: set_oneshot_mods(MOD_BIT(KC_LSFT));; break;
+        case SINGLE_TAP: set_oneshot_mods(MOD_BIT(KC_LSFT)); break;
         case SINGLE_HOLD: register_mods(MOD_BIT(KC_LSFT)); break;
         case DOUBLE_TAP: set_oneshot_mods(MOD_BIT(KC_LSFT)|MOD_BIT(KC_LALT)); break;
         case DOUBLE_HOLD: register_mods(MOD_BIT(KC_LSFT)|MOD_BIT(KC_LALT)); break;
@@ -261,6 +261,51 @@ void shift_alt_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (dance_state.step) {
         case SINGLE_HOLD: unregister_mods(MOD_BIT(KC_LSFT)); break;
         case DOUBLE_HOLD: unregister_mods(MOD_BIT(KC_LSFT)|MOD_BIT(KC_LALT)); break;
+    }
+    dance_state.step = 0;
+}
+
+void on_ctrl_alt(qk_tap_dance_state_t *state, void *user_data);
+uint8_t ctrl_alt_dance_step(qk_tap_dance_state_t *state);
+void ctrl_alt_finished(qk_tap_dance_state_t *state, void *user_data);
+void ctrl_alt_reset(qk_tap_dance_state_t *state, void *user_data);
+
+void on_ctrl_alt(qk_tap_dance_state_t *state, void *user_data) {
+    if(state->count == 3) {
+        tap_code16(KC_RIGHT);
+        tap_code16(KC_RIGHT);
+        tap_code16(KC_RIGHT);
+    }
+    if(state->count > 3) {
+        tap_code16(KC_RIGHT);
+    }
+}
+
+uint8_t ctrl_alt_dance_step(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted && !state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else if (state->count == 2) {
+        if (state->interrupted && !state->pressed) return DOUBLE_TAP;
+        else return DOUBLE_HOLD;
+    }
+    return MORE_TAPS;
+}
+void ctrl_alt_finished(qk_tap_dance_state_t *state, void *user_data) {
+    dance_state.step = shift_alt_dance_step(state);
+    switch (dance_state.step) {
+        case SINGLE_TAP: set_oneshot_mods(MOD_BIT(KC_RCTL)); break;
+        case SINGLE_HOLD: register_mods(MOD_BIT(KC_RCTL)); break;
+        case DOUBLE_TAP: set_oneshot_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT)); break;
+        case DOUBLE_HOLD: register_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT)); break;
+    }
+}
+
+void ctrl_alt_reset(qk_tap_dance_state_t *state, void *user_data) {
+    wait_ms(10);
+    switch (dance_state.step) {
+        case SINGLE_HOLD: unregister_mods(MOD_BIT(KC_RCTL)); break;
+        case DOUBLE_HOLD: unregister_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT)); break;
     }
     dance_state.step = 0;
 }
@@ -277,45 +322,11 @@ void dtlt(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void shift_alt(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        set_oneshot_mods(MOD_BIT(KC_LSFT));
-        if (state->pressed) {
-            register_mods(MOD_BIT(KC_LSFT));
-        }
-    } else {
-        set_oneshot_mods(MOD_BIT(KC_LSFT)|MOD_BIT(KC_LALT));
-        if (state->pressed) {
-            register_mods(MOD_BIT(KC_LSFT)|MOD_BIT(KC_LALT));
-        }
-    }
-}
-
-void ctrl_alt(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        set_oneshot_mods(MOD_BIT(KC_RCTL));
-        if (state->pressed) {
-            set_oneshot_mods(MOD_BIT(KC_RCTL));
-            if (state->interrupted) {
-                set_oneshot_mods(MOD_BIT(KC_RCTL));
-            }
-        }
-    } else {
-        set_oneshot_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT));
-        if (state->pressed) {
-            set_oneshot_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT));
-            if (state->interrupted) {
-                set_oneshot_mods(MOD_BIT(KC_RCTL)|MOD_BIT(KC_RALT));
-            }
-        }
-    }
-}
-
 qk_tap_dance_action_t tap_dance_actions[] = {
     [DANCE_1] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_1, dance_1_finished, dance_1_reset),
     [DANCE_2] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_2, dance_2_finished, dance_2_reset),
     [DANCE_3] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_3, dance_3_finished, dance_3_reset),
     [SHIFT_ALT] = ACTION_TAP_DANCE_FN_ADVANCED(on_shift_alt, shift_alt_finished, shift_alt_reset),
+    [CTRL_ALT] = ACTION_TAP_DANCE_FN_ADVANCED(on_ctrl_alt, ctrl_alt_finished, ctrl_alt_reset),
     [DTLT] = ACTION_TAP_DANCE_FN(dtlt),
-    [CTRL_ALT] = ACTION_TAP_DANCE_FN(ctrl_alt),
 };
